@@ -3,60 +3,40 @@
 // in the html.
 $(function () {
 
-  let hourTracker = [{
-    'hour-9': ""
-  }, {
-    "hour-10": ""
-  }, {
-    'hour11': ""
-  }, {
-    "hour-12": ""
-  }, {
-    'hour-13': ""
-  }, {
-    "hour-14": ""
-  }, {
-    'hour-15': ""
-  }, {
-    "hour-16": ""
-  }, {
-    "hour-17": ""
-  }];
+  let hourTracker = {
+    '9': "",
+    "10": "",
+    '11': "",
+    "12": "",
+    '13': "",
+    "14": "",
+    '15': "",
+    "16": "",
+    "17": ""
+  };
 
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-/* Successfully grab clicked element from event.target.nodeName
-Need to figure out how to get the id of the parent div so we can store the sibling storage */
-
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-/* Add a function to apply certain classes to all divs in 
-
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-/* Use the init function to retrieve storage on load. Have a case for if null storage */
-
-  //
-  // TODO: Add code to display the current date in the header of the page.
-  // dayJS code 
+  // Function to grab the time -- it uses the updateClasses function to update classes 
+  function retrieveTime() {
+    let timeInterval = setInterval( function() {
+        let today = dayjs();
+        $('#currentDay').text(today.format('[The current day is: ] MMM D, YYYY'));
+    })
+    // $('#current-time').text(today.format('[The current day is: ] MMM D, YYYY, h:mm:ss'));
+}
 
 
   // Event listener to save the written text to local storage
   $('.container-lg').on('click', function (event) {
 
     let clickedElement = $(event.target);
-    let clickedHourID = clickedElement.closest('div[id]');
-    let textToStore = clickedHourID.children('textarea').val();
+    let clickedHourElement = clickedElement.closest('div[id]');
+    let textToStore = clickedHourElement.children('textarea').val();
+    let clickedHourID = clickedHourElement[0].id;
+
+    // console.log(clickedElement);
+    // console.log(clickedHourElement);
+    // console.log(textToStore);
+    // console.log(clickedHourID);
 
     // If the user clicked on the save icon or button, then activate the save text function     
     if (clickedElement[0].nodeName == "BUTTON" || clickedElement[0].nodeName == "I" ) {
@@ -68,45 +48,51 @@ Need to figure out how to get the id of the parent div so we can store the sibli
   // Function to save the text to the local storage
   function saveText( hour, text ) {
     hourTracker[hour] = text;
-    localStorage.setItem('userCalendar', JSON.stringify(hourTracker))
+    console.log(hourTracker[hour]);
+    localStorage.setItem('userCalendar', JSON.stringify(hourTracker));
   }
 
   // Function to retrieve the text and display it in the text area of what was clicked
   function retrieveText () {
     hourTracker = JSON.parse( localStorage.getItem('userCalendar'));
-    console.log(hourTracker)
+    console.log(hourTracker);
 
     // If storage is empty, reset the tracker. Else, update the textarea for each calendar hour
     if (hourTracker == null) {
-      hourTracker = [{
-        'hour-9': ""
-      }, {
-        "hour-10": ""
-      }, {
-        'hour11': ""
-      }, {
-        "hour-12": ""
-      }, {
-        'hour-13': ""
-      }, {
-        "hour-14": ""
-      }, {
-        'hour-15': ""
-      }, {
-        "hour-16": ""
-      }, {
-        "hour-17": ""
-      }];
+      hourTracker = {
+        '9': "",
+        "10": "",
+        '11': "",
+        "12": "",
+        '13': "",
+        "14": "",
+        '15': "",
+        "16": "",
+        "17": ""
+      };
     } else {
-      for (let i = 0; i < hourTracker.length; i++) {
+      let objectKeys = Object.keys(hourTracker);
+      for (let i = 0; i < objectKeys.length; i++) {
         // Loop through each object in the array
         // If the value is not empty, update the innerHTML of the textarea for the div with the key id
-        hourTracker[i] // This is the array
-        let key = Object.keys(hourTracker[i]) //this is an array of keys of the JS object
-        
-
+        let key = objectKeys[i]
+        $("#" + key).children('textarea').text( hourTracker[key] );     
       }
     }
+  }
+
+  function init() {
+    retrieveTime();
+    retrieveText();
+  }
+
+  init();
+
+  // Create a function to assign classes to the time blocks
+  function setClass() {
+    $('.time-block').each( function () {
+
+    })
   }
 
 });
