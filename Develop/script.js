@@ -64,6 +64,7 @@ $(function () {
   // Event listener to save the written text to local storage
   $('.container-lg').on('click', function (event) {
 
+
     let clickedElement = $(event.target);  // gives jQuery object of the clicked element
     let clickedHourElement = clickedElement.closest('div[id]'); //Gives the jQuery object of the closest div with an id (the timeblock)
     let textToStore = clickedHourElement.children('textarea').val(); // Gives the text in the textarea of the block that was clicked
